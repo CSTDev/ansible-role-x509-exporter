@@ -5,6 +5,7 @@
 x509_exporter_version: "3.16.0"
 x509_exporter_arch: "amd64"
 x509_exporter_os: "linux"
+x509_exporter_download_url: "https://github.com/enix/x509-exporter/releases/download/v{{ x509_exporter_version }}/x509-exporter-{{ x509_exporter_os }}-{{ x509_exporter_arch }}"
 
 x509_exporter_user: "x509-exporter"
 x509_exporter_group: "x509-exporter"
@@ -15,5 +16,7 @@ x509_exporter_listen_address: "0.0.0.0"
 
 x509_exporter_watched_paths:
   - /etc/ssl/certs
+
+x509_exporter_watched_files: []
 
 x509_exporter_extra_flags: []

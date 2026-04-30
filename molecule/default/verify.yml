@@ -46,6 +46,21 @@
         database: group
         key: x509-exporter
 
+    - name: Read systemd service unit contents
+      ansible.builtin.slurp:
+        src: /etc/systemd/system/x509-exporter.service
+      register: service_unit
+
+    - name: Assert watch-dir flag is present in service unit
+      ansible.builtin.assert:
+        that:
+          - "'--watch-dir=/etc/ssl/certs' in (service_unit.content | b64decode)"
+
+    - name: Assert watch-file flag is present in service unit
+      ansible.builtin.assert:
+        that:
+          - "'--watch-file=/etc/ssl/certs/ca-certificates.crt' in (service_unit.content | b64decode)"
+
     - name: Check metrics endpoint is accessible
       ansible.builtin.uri:
         url: "http://localhost:9793/metrics"

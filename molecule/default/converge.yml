@@ -3,5 +3,9 @@
   hosts: all
   become: true
 
+  vars:
+    x509_exporter_watched_files:
+      - /etc/ssl/certs/ca-certificates.crt
+
   roles:
     - role: ansible-role-x509-exporter

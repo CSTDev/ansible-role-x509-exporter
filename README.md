@@ -19,12 +19,14 @@ All variables are defined in [defaults/main.yml](defaults/main.yml) and can be o
 | `x509_exporter_version` | `3.16.0` | Version of x509-exporter to install |
 | `x509_exporter_arch` | `amd64` | Target architecture (`amd64`, `arm64`) |
 | `x509_exporter_os` | `linux` | Target OS |
+| `x509_exporter_download_url` | *(derived)* | Full URL to the release binary; override to use a mirror or pre-staged URL |
 | `x509_exporter_user` | `x509-exporter` | System user the service runs as |
 | `x509_exporter_group` | `x509-exporter` | System group for the service user |
 | `x509_exporter_install_dir` | `/usr/local/bin` | Directory to install the binary into |
 | `x509_exporter_port` | `9793` | Port to expose metrics on |
 | `x509_exporter_listen_address` | `0.0.0.0` | Address to listen on |
 | `x509_exporter_watched_paths` | `[/etc/ssl/certs]` | List of directories to scan for certificates |
+| `x509_exporter_watched_files` | `[]` | List of individual certificate files to watch (`--watch-file`) |
 | `x509_exporter_extra_flags` | `[]` | Additional CLI flags to pass to the exporter |
 
 ## Dependencies
@@ -55,7 +57,8 @@ With custom configuration:
         x509_exporter_watched_paths:
           - /etc/ssl/certs
           - /etc/nginx/ssl
-          - /etc/letsencrypt/live
+        x509_exporter_watched_files:
+          - /etc/letsencrypt/live/example.com/fullchain.pem
 ```
 
 ## Testing

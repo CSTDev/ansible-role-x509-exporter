@@ -10,6 +10,9 @@ ExecStart={{ x509_exporter_install_dir }}/x509-exporter \
 {% for path in x509_exporter_watched_paths %}
   --watch-dir={{ path }} \
 {% endfor %}
+{% for file in x509_exporter_watched_files %}
+  --watch-file={{ file }} \
+{% endfor %}
 {% for flag in x509_exporter_extra_flags %}
   {{ flag }} \
 {% endfor %}

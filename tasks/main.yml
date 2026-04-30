@@ -19,7 +19,7 @@
 
 - name: Download x509-exporter binary
   ansible.builtin.get_url:
-    url: "https://github.com/enix/x509-exporter/releases/download/v{{ x509_exporter_version }}/x509-exporter-{{ x509_exporter_os }}-{{ x509_exporter_arch }}"
+    url: "{{ x509_exporter_download_url }}"
     dest: "{{ x509_exporter_install_dir }}/x509-exporter"
     owner: root
     group: root
