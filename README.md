@@ -1,38 +1,82 @@
-Role Name
-=========
+# ansible-role-x509-exporter
 
-A brief description of the role goes here.
+Ansible role to install and configure the [enix/x509-exporter](https://github.com/enix/x509-exporter) — a Prometheus exporter that monitors TLS certificate expiry from files on disk.
 
-Requirements
-------------
+![Molecule Tests](https://github.com/cstdev/ansible-role-x509-exporter/actions/workflows/molecule.yml/badge.svg)
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+## Requirements
 
-Role Variables
---------------
+- Ansible >= 2.14
+- A systemd-based Linux host
+- Internet access to download the binary from GitHub releases (or pre-stage it)
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+## Role Variables
 
-Dependencies
-------------
+All variables are defined in [defaults/main.yml](defaults/main.yml) and can be overridden.
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+| Variable | Default | Description |
+|---|---|---|
+| `x509_exporter_version` | `3.16.0` | Version of x509-exporter to install |
+| `x509_exporter_arch` | `amd64` | Target architecture (`amd64`, `arm64`) |
+| `x509_exporter_os` | `linux` | Target OS |
+| `x509_exporter_user` | `x509-exporter` | System user the service runs as |
+| `x509_exporter_group` | `x509-exporter` | System group for the service user |
+| `x509_exporter_install_dir` | `/usr/local/bin` | Directory to install the binary into |
+| `x509_exporter_port` | `9793` | Port to expose metrics on |
+| `x509_exporter_listen_address` | `0.0.0.0` | Address to listen on |
+| `x509_exporter_watched_paths` | `[/etc/ssl/certs]` | List of directories to scan for certificates |
+| `x509_exporter_extra_flags` | `[]` | Additional CLI flags to pass to the exporter |
 
-Example Playbook
-----------------
+## Dependencies
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+None.
 
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
+## Example Playbook
 
-License
--------
+Minimal usage:
 
-BSD
+```yaml
+- hosts: servers
+  become: true
+  roles:
+    - role: cstdev.x509_exporter
+```
 
-Author Information
-------------------
+With custom configuration:
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+```yaml
+- hosts: servers
+  become: true
+  roles:
+    - role: cstdev.x509_exporter
+      vars:
+        x509_exporter_version: "3.16.0"
+        x509_exporter_port: 9793
+        x509_exporter_watched_paths:
+          - /etc/ssl/certs
+          - /etc/nginx/ssl
+          - /etc/letsencrypt/live
+```
+
+## Testing
+
+Tests use [Molecule](https://molecule.readthedocs.io/) with the Docker driver.
+
+```bash
+pip install -r requirements.txt
+molecule test
+```
+
+The default scenario spins up an Ubuntu 22.04 container, converges the role, then verifies:
+- The binary is installed and executable
+- The systemd service unit is present, enabled, and active
+- The system user and group exist
+- The `/metrics` endpoint returns x509 certificate metrics
+
+## License
+
+MIT
+
+## Author
+
+[CSTDev](https://github.com/cstdev)

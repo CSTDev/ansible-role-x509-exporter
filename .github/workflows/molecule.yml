@@ -1,0 +1,37 @@
+---
+name: Molecule Tests
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  molecule:
+    name: Molecule
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          path: ansible-role-x509-exporter
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+        working-directory: ansible-role-x509-exporter
+
+      - name: Run molecule tests
+        run: molecule test
+        working-directory: ansible-role-x509-exporter
+        env:
+          PY_COLORS: "1"
+          ANSIBLE_FORCE_COLOR: "1"

@@ -1,3 +1,45 @@
 #SPDX-License-Identifier: MIT-0
 ---
 # tasks file for ansible-role-x509-exporter
+
+- name: Create x509-exporter group
+  ansible.builtin.group:
+    name: "{{ x509_exporter_group }}"
+    system: true
+    state: present
+
+- name: Create x509-exporter user
+  ansible.builtin.user:
+    name: "{{ x509_exporter_user }}"
+    group: "{{ x509_exporter_group }}"
+    system: true
+    shell: /sbin/nologin
+    create_home: false
+    state: present
+
+- name: Download x509-exporter binary
+  ansible.builtin.get_url:
+    url: "https://github.com/enix/x509-exporter/releases/download/v{{ x509_exporter_version }}/x509-exporter-{{ x509_exporter_os }}-{{ x509_exporter_arch }}"
+    dest: "{{ x509_exporter_install_dir }}/x509-exporter"
+    owner: root
+    group: root
+    mode: "0755"
+  notify: Restart x509-exporter
+
+- name: Create systemd service
+  ansible.builtin.template:
+    src: x509-exporter.service.j2
+    dest: /etc/systemd/system/x509-exporter.service
+    owner: root
+    group: root
+    mode: "0644"
+  notify:
+    - Reload systemd
+    - Restart x509-exporter
+
+- name: Enable and start x509-exporter service
+  ansible.builtin.systemd:
+    name: x509-exporter
+    enabled: true
+    state: started
+    daemon_reload: true

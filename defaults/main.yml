@@ -1,3 +1,19 @@
 #SPDX-License-Identifier: MIT-0
 ---
 # defaults file for ansible-role-x509-exporter
+
+x509_exporter_version: "3.16.0"
+x509_exporter_arch: "amd64"
+x509_exporter_os: "linux"
+
+x509_exporter_user: "x509-exporter"
+x509_exporter_group: "x509-exporter"
+x509_exporter_install_dir: "/usr/local/bin"
+
+x509_exporter_port: 9793
+x509_exporter_listen_address: "0.0.0.0"
+
+x509_exporter_watched_paths:
+  - /etc/ssl/certs
+
+x509_exporter_extra_flags: []

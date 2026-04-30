@@ -1,0 +1,21 @@
+[Unit]
+Description=x509 Certificate Exporter
+After=network.target
+
+[Service]
+User={{ x509_exporter_user }}
+Group={{ x509_exporter_group }}
+ExecStart={{ x509_exporter_install_dir }}/x509-exporter \
+  --listen-address={{ x509_exporter_listen_address }}:{{ x509_exporter_port }} \
+{% for path in x509_exporter_watched_paths %}
+  --watch-dir={{ path }} \
+{% endfor %}
+{% for flag in x509_exporter_extra_flags %}
+  {{ flag }} \
+{% endfor %}
+
+Restart=on-failure
+RestartSec=5s
+
+[Install]
+WantedBy=multi-user.target

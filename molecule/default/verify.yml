@@ -1,0 +1,59 @@
+---
+- name: Verify
+  hosts: all
+  become: true
+
+  tasks:
+    - name: Check x509-exporter binary exists
+      ansible.builtin.stat:
+        path: /usr/local/bin/x509-exporter
+      register: binary_stat
+
+    - name: Assert binary is present and executable
+      ansible.builtin.assert:
+        that:
+          - binary_stat.stat.exists
+          - binary_stat.stat.executable
+
+    - name: Check systemd service file exists
+      ansible.builtin.stat:
+        path: /etc/systemd/system/x509-exporter.service
+      register: service_stat
+
+    - name: Assert service file is present
+      ansible.builtin.assert:
+        that:
+          - service_stat.stat.exists
+
+    - name: Check x509-exporter service is running
+      ansible.builtin.systemd:
+        name: x509-exporter
+      register: service_status
+
+    - name: Assert service is active and enabled
+      ansible.builtin.assert:
+        that:
+          - service_status.status.ActiveState == "active"
+          - service_status.status.UnitFileState == "enabled"
+
+    - name: Check x509-exporter user exists
+      ansible.builtin.getent:
+        database: passwd
+        key: x509-exporter
+
+    - name: Check x509-exporter group exists
+      ansible.builtin.getent:
+        database: group
+        key: x509-exporter
+
+    - name: Check metrics endpoint is accessible
+      ansible.builtin.uri:
+        url: "http://localhost:9793/metrics"
+        return_content: true
+      register: metrics_response
+
+    - name: Assert metrics endpoint returns x509 metrics
+      ansible.builtin.assert:
+        that:
+          - metrics_response.status == 200
+          - "'x509_cert_' in metrics_response.content"
