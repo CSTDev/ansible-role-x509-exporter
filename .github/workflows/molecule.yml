@@ -1,7 +1,7 @@
 ---
 name: Molecule Tests
 
-on:
+"on":
   push:
     branches:
       - main

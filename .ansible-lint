@@ -3,6 +3,7 @@ profile: production
 
 exclude_paths:
   - molecule/
+  - tests/
 
 warn_list:
   - yaml[line-length]
