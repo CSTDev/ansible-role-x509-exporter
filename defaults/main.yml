@@ -2,10 +2,12 @@
 ---
 # defaults file for ansible-role-x509-exporter
 
-x509_exporter_version: "3.16.0"
-x509_exporter_arch: "amd64"
+x509_exporter_version: "3.21.0"
+x509_exporter_arch: "{{ _x509_exporter_arch_map[ansible_facts['architecture']] | default('amd64') }}"
 x509_exporter_os: "linux"
-x509_exporter_download_url: "https://github.com/enix/x509-exporter/releases/download/v{{ x509_exporter_version }}/x509-exporter-{{ x509_exporter_os }}-{{ x509_exporter_arch }}"
+x509_exporter_binary_name: "x509-certificate-exporter"
+x509_exporter_download_url: "https://github.com/enix/x509-certificate-exporter/releases/download/v{{ x509_exporter_version }}/x509-certificate-exporter-{{ x509_exporter_os }}-{{ x509_exporter_arch }}.tar.gz"
+x509_exporter_checksum: "sha256:{{ x509_exporter_download_url }}.sha256"
 
 x509_exporter_user: "x509-exporter"
 x509_exporter_group: "x509-exporter"

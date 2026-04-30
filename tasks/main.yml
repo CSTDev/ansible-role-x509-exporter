@@ -17,10 +17,19 @@
     create_home: false
     state: present
 
-- name: Download x509-exporter binary
+- name: Download x509-exporter archive
   ansible.builtin.get_url:
     url: "{{ x509_exporter_download_url }}"
-    dest: "{{ x509_exporter_install_dir }}/x509-exporter"
+    dest: "/tmp/{{ x509_exporter_binary_name }}.tar.gz"
+    checksum: "{{ x509_exporter_checksum }}"
+    mode: "0644"
+
+- name: Extract x509-exporter binary
+  ansible.builtin.unarchive:
+    src: "/tmp/{{ x509_exporter_binary_name }}.tar.gz"
+    dest: "{{ x509_exporter_install_dir }}"
+    include: "{{ x509_exporter_binary_name }}"
+    remote_src: true
     owner: root
     group: root
     mode: "0755"

@@ -17,9 +17,10 @@ All variables are defined in [defaults/main.yml](defaults/main.yml) and can be o
 | Variable | Default | Description |
 |---|---|---|
 | `x509_exporter_version` | `3.16.0` | Version of x509-exporter to install |
-| `x509_exporter_arch` | `amd64` | Target architecture (`amd64`, `arm64`) |
+| `x509_exporter_arch` | *(auto-detected)* | Target architecture; auto-mapped from `ansible_architecture` (`amd64`, `arm64`) |
 | `x509_exporter_os` | `linux` | Target OS |
-| `x509_exporter_download_url` | *(derived)* | Full URL to the release binary; override to use a mirror or pre-staged URL |
+| `x509_exporter_download_url` | *(derived)* | Full URL to the release archive; override to use a mirror or pre-staged URL |
+| `x509_exporter_checksum` | *(derived)* | Checksum for the archive; resolves to the upstream `.sha256` URL so it tracks arch and version automatically |
 | `x509_exporter_user` | `x509-exporter` | System user the service runs as |
 | `x509_exporter_group` | `x509-exporter` | System group for the service user |
 | `x509_exporter_install_dir` | `/usr/local/bin` | Directory to install the binary into |

@@ -6,7 +6,7 @@
   tasks:
     - name: Check x509-exporter binary exists
       ansible.builtin.stat:
-        path: /usr/local/bin/x509-exporter
+        path: /usr/local/bin/x509-certificate-exporter
       register: binary_stat
 
     - name: Assert binary is present and executable

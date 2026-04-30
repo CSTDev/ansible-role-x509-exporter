@@ -23,6 +23,8 @@ provisioner:
   playbooks:
     converge: converge.yml
     verify: verify.yml
+  env:
+    ANSIBLE_ROLES_PATH: "${MOLECULE_PROJECT_DIRECTORY}/.."
   config_options:
     defaults:
       interpreter_python: auto_silent

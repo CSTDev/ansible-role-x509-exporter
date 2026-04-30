@@ -1,5 +1,7 @@
 #SPDX-License-Identifier: MIT-0
 galaxy_info:
+  role_name: x509_exporter
+  namespace: cstdev
   author: CSTDev
   description: Install and configure the enix x509-exporter Prometheus exporter for TLS certificate monitoring
   license: MIT
